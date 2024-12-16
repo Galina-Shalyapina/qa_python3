@@ -1,3 +1,5 @@
+import pytest
+
 from main import BooksCollector
 
 
@@ -12,13 +14,14 @@ class TestBooksCollector:
 
         assert len(collector.get_books_genre()) == 2
 
-    def test_add_new_book_max_length(self):
-        """Тест максимальной длины строки"""
+    @pytest.mark.parametrize('book_name, expected_result', [
+        ('A' * 41, False),
+        ('A' * 40, True),
+    ])
+    def test_add_new_book_max_length(self, book_name, expected_result):
         collector = BooksCollector()
-
-        collector.add_new_book('A' * 41)
-
-        assert 'A' * 41 not in collector.get_books_genre()
+        collector.add_new_book(book_name)
+        assert (book_name in collector.get_books_genre()) == expected_result
 
     def test_add_new_book_duplicate(self):
         """Тест дубликатов книг"""
