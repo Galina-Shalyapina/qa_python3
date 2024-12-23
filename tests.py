@@ -45,6 +45,7 @@ class TestBooksCollector:
         """Тест установки жанра несуществующей книге"""
         collector = BooksCollector()
 
+        collector.add_new_book('Book1')
         collector.set_book_genre('Book2', 'Фантастика')
 
         assert 'Book2' not in collector.get_books_genre()
@@ -71,6 +72,7 @@ class TestBooksCollector:
         """Тест получения жанра по несуществующей книге"""
         collector = BooksCollector()
 
+        collector.add_new_book('Book1')
         assert collector.get_book_genre('Book2') is None
 
     def test_get_books_with_specific_genre_valid(self):
@@ -79,14 +81,21 @@ class TestBooksCollector:
 
         collector.add_new_book('Book1')
         collector.add_new_book('Book2')
+        collector.add_new_book('Book3')
         collector.set_book_genre('Book1', 'Фантастика')
         collector.set_book_genre('Book2', 'Фантастика')
+        collector.set_book_genre('Book3', 'Детективы')
 
         assert collector.get_books_with_specific_genre('Фантастика') == ['Book1', 'Book2']
 
     def test_get_books_with_specific_genre_invalid(self):
         """Тест получения книг по несуществующему жанру"""
         collector = BooksCollector()
+
+        collector.add_new_book('Book1')
+        collector.add_new_book('Book2')
+        collector.set_book_genre('Book1', 'Фантастика')
+        collector.set_book_genre('Book2', 'Детективы')
 
         assert collector.get_books_with_specific_genre('Несуществующий жанр') == []
 
@@ -151,6 +160,8 @@ class TestBooksCollector:
         """Тест удаления несуществующей книги из избранного"""
         collector = BooksCollector()
 
+        collector.add_new_book('Book1')
+        collector.add_book_in_favorites('Book1')
         collector.delete_book_from_favorites('Book2')
 
         assert 'Book2' not in collector.get_list_of_favorites_books()
